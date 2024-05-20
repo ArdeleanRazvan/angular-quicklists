@@ -9,39 +9,46 @@ import { ChecklistListComponent } from './ui/checklist-list.component';
 @Component({
   standalone: true,
   selector: 'app-home',
-  template: `<header>
-      <p>Quicklists</p>
-      <button (click)="checklistEdited.set({})">Add Checklist</button>
-    </header>
-    <section>
-      <p>Your Checklists</p>
-      <app-checklist-list
-        [checklists]="checklistService.checklists()"
-        (delete)="checklistService.delete$.next($event)"
-        (edit)="checklistEdited.set($event)"
-      ></app-checklist-list>
-    </section>
-    <app-modal [isOpen]="!!checklistEdited()">
-      <ng-template>
-        <app-form-modal
-          [title]="
-            checklistEdited()?.title
-              ? checklistEdited()!.title!
-              : 'Add Checklist'
-          "
-          [formGroup]="checklistForm"
-          (close)="checklistEdited.set(null)"
-          (save)="
-            checklistEdited()?.id
-              ? checklistService.edit$.next({
-                  id: checklistEdited()!.id!,
-                  data: checklistForm.getRawValue()
-                })
-              : checklistService.add$.next(checklistForm.getRawValue())
-          "
-        ></app-form-modal>
-      </ng-template>
-    </app-modal>`,
+  template: `
+    <div class="my-6 flex justify-center">
+      <div
+        class="inline-flex flex-col rounded-xl bg-gradient-to-br from-violet-700 via-red-500 to-pink-600"
+      >
+        <header class="mx-1 mt-1 flex rounded-t-lg bg-slate-100">
+          <button (click)="checklistEdited.set({})">Add Checklist</button>
+        </header>
+        <section>
+          <p>Your Checklists</p>
+          <app-checklist-list
+            [checklists]="checklistService.checklists()"
+            (delete)="checklistService.delete$.next($event)"
+            (edit)="checklistEdited.set($event)"
+          ></app-checklist-list>
+        </section>
+        <app-modal [isOpen]="!!checklistEdited()">
+          <ng-template>
+            <app-form-modal
+              [title]="
+                checklistEdited()?.title
+                  ? checklistEdited()!.title!
+                  : 'Add Checklist'
+              "
+              [formGroup]="checklistForm"
+              (close)="checklistEdited.set(null)"
+              (save)="
+                checklistEdited()?.id
+                  ? checklistService.edit$.next({
+                      id: checklistEdited()!.id!,
+                      data: checklistForm.getRawValue()
+                    })
+                  : checklistService.add$.next(checklistForm.getRawValue())
+              "
+            ></app-form-modal>
+          </ng-template>
+        </app-modal>
+      </div>
+    </div>
+  `,
   imports: [ModalComponent, FormModalComponent, ChecklistListComponent],
 })
 export default class HomeComponent {
